@@ -20,6 +20,20 @@
       "longitude": 0.2810397797813948,
       "title": "Actividades Junto con Mayores",
       "description": "Actividades que estimulen las relaciones intergeneracionales."
+    },
+    {
+      "id": "a557",
+      "latitude": 41.67805138823252,
+      "longitude": 2.4882573567902,
+      "title": "Una propuesta que inspira",
+      "description": "Una inciativa con buen proposito"
+    },
+    {
+      "id": "014c",
+      "latitude": 41.47653320620623,
+      "longitude": 2.128511577761742,
+      "title": "Archivos de Memoria",
+      "description": "Crear archivos visuales a partir de recuerdos de nuestros Mayores, creando espacios de conversa, i ampliando la interaccion entre generacion, y por ende la transmision de conocimiento bidireccional!"
     }
   ]
 }
