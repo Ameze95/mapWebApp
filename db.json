@@ -1,0 +1,25 @@
+{
+  "contributions": [
+    {
+      "id": "ade4",
+      "latitude": 41.652828212275466,
+      "longitude": 0.7622602469688218,
+      "title": "Algo Bueno en Lleida",
+      "description": "Hagamos algo significativo"
+    },
+    {
+      "id": "3c6a",
+      "latitude": 41.97576548582808,
+      "longitude": 2.821204057790169,
+      "title": "Hagamos algo bueno en Girona",
+      "description": "Hagamos algo significativo por Girona"
+    },
+    {
+      "id": "7a8c",
+      "latitude": 41.42088414696843,
+      "longitude": 0.2810397797813948,
+      "title": "Actividades Junto con Mayores",
+      "description": "Actividades que estimulen las relaciones intergeneracionales."
+    }
+  ]
+}
