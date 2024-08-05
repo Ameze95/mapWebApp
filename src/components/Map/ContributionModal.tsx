@@ -25,9 +25,13 @@ const ContributionModal: React.FC<ContributionModalProps> = ({ isOpen, onClose, 
           className="fixed inset-0 flex items-center justify-center"
           onInteractOutside={onClose}
           onClick={onClose}
+          aria-describedby="contribution-description"
         >
           <div className="bg-white p-6 rounded shadow-lg relative" onClick={(e) => e.stopPropagation()}>
             <Dialog.Title className="text-xl font-bold mb-4">Nueva Propuesta</Dialog.Title>
+            <Dialog.Description id="contribution-description" className="sr-only">
+              Formulario para crear una nueva propuesta.
+            </Dialog.Description>
             <Dialog.Close asChild>
               <button
                 className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"

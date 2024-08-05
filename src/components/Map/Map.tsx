@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactMapGL, { NavigationControl, FullscreenControl, GeolocateControl, ScaleControl, Marker } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import FloatingButton from './FloatingButton';
 import ContributionModal from './ContributionModal';
 import InfoModal from './InfoModal';
 import './Map.css'; // Importar los estilos
@@ -11,6 +10,7 @@ const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 const SERVER_URL = 'http://192.168.1.211:5000'; // Reemplaza con la dirección IP de tu máquina de desarrollo
 
 interface Contribution {
+  id: string;
   title: string;
   description: string;
   latitude: number;
@@ -40,7 +40,10 @@ const Map: React.FC = () => {
   useEffect(() => {
     fetch(`${SERVER_URL}/contributions`)
       .then(response => response.json())
-      .then(data => setContributions(data));
+      .then(data => {
+        console.log('Contributions loaded:', data); // Añadir un log para verificar los datos cargados
+        setContributions(data);
+      });
   }, []);
 
   const handleAddContribution = () => {
@@ -54,7 +57,7 @@ const Map: React.FC = () => {
   };
 
   const handleModalSubmit = (data: { title: string; description: string }) => {
-    const newContribution = { ...markerPosition, ...data } as Contribution;
+    const newContribution = { id: Date.now().toString(), ...markerPosition, ...data } as Contribution;
     const updatedContributions = [...contributions, newContribution];
     setContributions(updatedContributions);
     setMarkerPosition(null);
@@ -90,30 +93,36 @@ const Map: React.FC = () => {
         <GeolocateControl position="top-right" />
         <ScaleControl position="bottom-left" />
         {isAdding && (
-          <Marker latitude={viewState.latitude} longitude={viewState.longitude}>
-            <div className="mapboxgl-marker"></div>
+          <Marker latitude={viewState.latitude} longitude={viewState.longitude} offsetLeft={-20} offsetTop={-10}>
+            <div className="mapboxgl-marker-adding"></div>
           </Marker>
         )}
-        {contributions.map((contribution, index) => (
-          <Marker key={index} latitude={contribution.latitude} longitude={contribution.longitude}>
+        {contributions.map((contribution) => (
+          <Marker key={contribution.id} latitude={contribution.latitude} longitude={contribution.longitude} offsetLeft={-20} offsetTop={-10}>
             <div
-              className="mapboxgl-marker"
+              className="mapboxgl-marker-saved"
               onClick={() => handleMarkerClick(contribution)}
             ></div>
           </Marker>
         ))}
       </ReactMapGL>
-      <FloatingButton onClick={handleAddContribution} />
-      {isAdding && (
-        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2">
+      <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2">
+        {isAdding ? (
           <button
             className="bg-green-500 text-white p-2 rounded hover:bg-green-600"
             onClick={handleConfirmContribution}
           >
             OK
           </button>
-        </div>
-      )}
+        ) : (
+          <button
+            className="bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600"
+            onClick={handleAddContribution}
+          >
+            + Contribute
+          </button>
+        )}
+      </div>
       <ContributionModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
