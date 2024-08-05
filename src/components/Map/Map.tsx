@@ -1,7 +1,8 @@
 // src/components/Map/Map.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactMapGL, { NavigationControl, FullscreenControl, GeolocateControl, ScaleControl, Marker } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import supercluster from 'supercluster';
 import ContributionModal from './ContributionModal';
 import InfoModal from './InfoModal';
 import './Map.css'; // Importar los estilos
@@ -30,6 +31,8 @@ const Map: React.FC = () => {
   const [contributions, setContributions] = useState<Contribution[]>([]);
   const [selectedContribution, setSelectedContribution] = useState<Contribution | null>(null);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const [clusters, setClusters] = useState<any[]>([]);
+  const mapRef = useRef<any>(null);
 
   useEffect(() => {
     if (isAdding) {
@@ -45,6 +48,28 @@ const Map: React.FC = () => {
         setContributions(data);
       });
   }, []);
+
+  useEffect(() => {
+    if (mapRef.current) {
+      const bounds = mapRef.current.getMap().getBounds().toArray().flat();
+      const index = new supercluster({
+        radius: 75,
+        maxZoom: 16,
+      });
+      index.load(
+        contributions.map(contribution => ({
+          type: 'Feature',
+          properties: { cluster: false, contributionId: contribution.id },
+          geometry: {
+            type: 'Point',
+            coordinates: [contribution.longitude, contribution.latitude],
+          },
+        }))
+      );
+      const clusters = index.getClusters(bounds, Math.round(viewState.zoom));
+      setClusters(clusters);
+    }
+  }, [contributions, viewState]);
 
   const handleAddContribution = () => {
     setIsAdding(true);
@@ -74,9 +99,54 @@ const Map: React.FC = () => {
     console.log('Contribución guardada:', newContribution);
   };
 
-  const handleMarkerClick = (contribution: Contribution) => {
-    setSelectedContribution(contribution);
-    setIsInfoModalOpen(true);
+  const handleMarkerClick = (contributionId: string) => {
+    const contribution = contributions.find(c => c.id === contributionId);
+    if (contribution) {
+      setSelectedContribution(contribution);
+      setIsInfoModalOpen(true);
+    }
+  };
+
+  const renderClusterMarker = (cluster: any, index: any) => {
+    const [longitude, latitude] = cluster.geometry.coordinates;
+    const { cluster: isCluster, point_count: pointCount } = cluster.properties;
+
+    if (isCluster) {
+      return (
+        <Marker key={`cluster-${cluster.id}`} latitude={latitude} longitude={longitude}>
+          <div
+            className="cluster-marker"
+            style={{
+              width: `${10 + (pointCount / contributions.length) * 20}px`,
+              height: `${10 + (pointCount / contributions.length) * 20}px`,
+            }}
+            onClick={() => {
+              const expansionZoom = Math.min(
+                index.getClusterExpansionZoom(cluster.id),
+                20
+              );
+              setViewState({
+                ...viewState,
+                latitude,
+                longitude,
+                zoom: expansionZoom,
+              });
+            }}
+          >
+            {pointCount}
+          </div>
+        </Marker>
+      );
+    }
+
+    return (
+      <Marker key={`contribution-${cluster.properties.contributionId}`} latitude={latitude} longitude={longitude}>
+        <div
+          className="mapboxgl-marker-saved"
+          onClick={() => handleMarkerClick(cluster.properties.contributionId)}
+        ></div>
+      </Marker>
+    );
   };
 
   return (
@@ -84,6 +154,7 @@ const Map: React.FC = () => {
       <ReactMapGL
         {...viewState}
         onMove={(evt) => setViewState(evt.viewState)}
+        ref={mapRef}
         style={{ width: '100%', height: 'calc(100vh - 64px)' }} // Ajusta la altura del mapa
         mapStyle="mapbox://styles/mapbox/streets-v11"
         mapboxAccessToken={MAPBOX_TOKEN}
@@ -97,14 +168,7 @@ const Map: React.FC = () => {
             <div className="mapboxgl-marker-adding"></div>
           </Marker>
         )}
-        {contributions.map((contribution) => (
-          <Marker key={contribution.id} latitude={contribution.latitude} longitude={contribution.longitude}>
-            <div
-              className="mapboxgl-marker-saved"
-              onClick={() => handleMarkerClick(contribution)}
-            ></div>
-          </Marker>
-        ))}
+        {clusters.map((cluster, index) => renderClusterMarker(cluster, index))}
       </ReactMapGL>
       <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2">
         {isAdding ? (
