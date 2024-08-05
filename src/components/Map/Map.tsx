@@ -117,8 +117,8 @@ const Map: React.FC = () => {
           <div
             className="cluster-marker"
             style={{
-              width: `${10 + (pointCount / contributions.length) * 20}px`,
-              height: `${10 + (pointCount / contributions.length) * 20}px`,
+              width: `${25 + (pointCount / contributions.length) * 20}px`,
+              height: `${25 + (pointCount / contributions.length) * 20}px`,
             }}
             onClick={() => {
               const expansionZoom = Math.min(
