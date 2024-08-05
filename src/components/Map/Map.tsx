@@ -93,12 +93,12 @@ const Map: React.FC = () => {
         <GeolocateControl position="top-right" />
         <ScaleControl position="bottom-left" />
         {isAdding && (
-          <Marker latitude={viewState.latitude} longitude={viewState.longitude} offsetLeft={-20} offsetTop={-10}>
+          <Marker latitude={viewState.latitude} longitude={viewState.longitude}>
             <div className="mapboxgl-marker-adding"></div>
           </Marker>
         )}
         {contributions.map((contribution) => (
-          <Marker key={contribution.id} latitude={contribution.latitude} longitude={contribution.longitude} offsetLeft={-20} offsetTop={-10}>
+          <Marker key={contribution.id} latitude={contribution.latitude} longitude={contribution.longitude}>
             <div
               className="mapboxgl-marker-saved"
               onClick={() => handleMarkerClick(contribution)}
