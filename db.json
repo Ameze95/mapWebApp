@@ -93,39 +93,73 @@
     },
     {
       "id": "q5r7",
-      "latitude": 41.500000,
-      "longitude": 2.300000,
+      "latitude": 41.5,
+      "longitude": 2.3,
       "title": "Mercado de Productos Locales",
       "description": "Creación de un mercado de productos locales para apoyar a los agricultores y productores de la región."
     },
     {
       "id": "m1n3",
       "latitude": 41.590796,
-      "longitude": 1.850000,
+      "longitude": 1.85,
       "title": "Eco Huertos Comunitarios",
       "description": "Creación de huertos ecológicos comunitarios para fomentar la agricultura sostenible y la cohesión social."
     },
     {
       "id": "n2o4",
       "latitude": 41.812345,
-      "longitude": 3.000000,
+      "longitude": 3,
       "title": "Biblioteca al Aire Libre",
       "description": "Instalación de bibliotecas al aire libre para promover la lectura y el intercambio de libros en la comunidad."
     },
     {
       "id": "o3p5",
-      "latitude": 41.980000,
-      "longitude": 2.800000,
+      "latitude": 41.98,
+      "longitude": 2.8,
       "title": "Talleres de Reciclaje Creativo",
       "description": "Organización de talleres para enseñar a la comunidad a reciclar y reutilizar materiales de manera creativa."
     },
     {
       "id": "p4q6",
-      "latitude": 41.400000,
-      "longitude": 2.200000,
+      "latitude": 41.4,
+      "longitude": 2.2,
       "title": "Cine al Aire Libre",
       "description": "Proyecciones de cine al aire libre para fomentar la cultura y el entretenimiento en la comunidad."
+    },
+    {
+      "id": "1722873381875",
+      "latitude": 41.423551781334396,
+      "longitude": 2.154849592328901,
+      "title": "Teesperolejosdeaqui",
+      "description": "Creacion de contenido divulgativo para viajeros, viajes con cercania, sin expectativas, tratando siempre conectado con el"
+    },
+    {
+      "id": "1722877845532",
+      "latitude": 41.63226152370339,
+      "longitude": 2.1710262125880035,
+      "title": "Fumar nubes",
+      "description": "Molt divertit"
+    },
+    {
+      "id": "1722877982787",
+      "latitude": 13.370763446134703,
+      "longitude": 103.85982330798583,
+      "title": "Three House ",
+      "description": "Escuela infantil"
+    },
+    {
+      "id": "1722883874744",
+      "latitude": 41.42710751972922,
+      "longitude": 2.137548349734743,
+      "title": "Taller de cocina tradicional ",
+      "description": "Platos tradicionales\n"
+    },
+    {
+      "id": "1722952704089",
+      "latitude": 42.22842955166888,
+      "longitude": -0.43207556559715954,
+      "title": "Wi-Free",
+      "description": "Proyecto para extender redes LoRaWAN en areas de poblacion de baja densisdad con problemas de conectividad"
     }
-    
   ]
 }

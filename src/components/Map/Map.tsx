@@ -8,7 +8,7 @@ import InfoModal from './InfoModal';
 import './Map.css'; // Importar los estilos
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
-const SERVER_URL = 'http://192.168.1.211:5000'; // Reemplaza con la dirección IP de tu máquina de desarrollo
+const SERVER_URL = 'https://wbv5tt81-5000.euw.devtunnels.ms'; // Reemplaza con la dirección IP de tu máquina de desarrollo
 
 interface Contribution {
   id: string;
@@ -33,6 +33,9 @@ const Map: React.FC = () => {
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [clusters, setClusters] = useState<any[]>([]);
   const mapRef = useRef<any>(null);
+  
+  
+
 
   useEffect(() => {
     if (isAdding) {
@@ -111,6 +114,8 @@ const Map: React.FC = () => {
     const [longitude, latitude] = cluster.geometry.coordinates;
     const { cluster: isCluster, point_count: pointCount } = cluster.properties;
 
+
+
     if (isCluster) {
       return (
         <Marker key={`cluster-${cluster.id}`} latitude={latitude} longitude={longitude}>
@@ -121,15 +126,14 @@ const Map: React.FC = () => {
               height: `${25 + (pointCount / contributions.length) * 20}px`,
             }}
             onClick={() => {
-              const expansionZoom = Math.min(
-                index.getClusterExpansionZoom(cluster.id),
-                20
-              );
+              // Instead of using index.getClusterExpansionZoom, increase zoom by a fixed amount
+              // This is a simplified approach; you may want to calculate this based on the cluster's size or density
+              const newZoomLevel = Math.min(viewState.zoom + 2, 20); // Ensure the zoom level does not exceed 20
               setViewState({
                 ...viewState,
                 latitude,
                 longitude,
-                zoom: expansionZoom,
+                zoom: newZoomLevel,
               });
             }}
           >
@@ -159,10 +163,10 @@ const Map: React.FC = () => {
         mapStyle="mapbox://styles/mapbox/streets-v11"
         mapboxAccessToken={MAPBOX_TOKEN}
       >
-        <NavigationControl position="top-right" />
-        <FullscreenControl position="top-right" />
+        {/*<NavigationControl position="top-right" />
+        <FullscreenControl position="top-right" />*/}
         <GeolocateControl position="top-right" />
-        <ScaleControl position="bottom-left" />
+        {/*<ScaleControl position="bottom-left" />*/}
         {isAdding && (
           <Marker latitude={viewState.latitude} longitude={viewState.longitude}>
             <div className="mapboxgl-marker-adding"></div>
