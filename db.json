@@ -160,6 +160,13 @@
       "longitude": -0.43207556559715954,
       "title": "Wi-Free",
       "description": "Proyecto para extender redes LoRaWAN en areas de poblacion de baja densisdad con problemas de conectividad"
+    },
+    {
+      "id": "1722962730028",
+      "latitude": 41.51816137040558,
+      "longitude": 1.9037426226708476,
+      "title": "Reciclage Local",
+      "description": "Propuesta que busca encontrar maneras de recliclar localmente despredicios generadados en la localidad"
     }
   ]
 }

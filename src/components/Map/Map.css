@@ -48,3 +48,11 @@
   justify-content: center;
   cursor: pointer;
 }
+
+.mapboxgl-ctrl.mapboxgl-ctrl-attrib {
+  display: none;
+}
+
+.a.mapboxgl-ctrl-logo {
+  display: none;
+}
