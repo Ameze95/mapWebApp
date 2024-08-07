@@ -1,4 +1,3 @@
-// src/components/Map/Map.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import ReactMapGL, { NavigationControl, FullscreenControl, GeolocateControl, ScaleControl, Marker } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -6,9 +5,11 @@ import supercluster from 'supercluster';
 import ContributionModal from './ContributionModal';
 import InfoModal from './InfoModal';
 import './Map.css'; // Importar los estilos
+import { supabase } from '../../../supabase/supabaseClient'; // Asegúrate de tener configurado el cliente de Supabase
+import { useAuth } from '../../../supabase/AuthContext'; // Asegúrate de tener configurado el contexto de autenticación
+
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
-const SERVER_URL = 'https://wbv5tt81-5000.euw.devtunnels.ms'; // Reemplaza con la dirección IP de tu máquina de desarrollo
 
 interface Contribution {
   id: string;
@@ -33,9 +34,8 @@ const Map: React.FC = () => {
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [clusters, setClusters] = useState<any[]>([]);
   const mapRef = useRef<any>(null);
-  
-  
 
+  const { user } = useAuth();
 
   useEffect(() => {
     if (isAdding) {
@@ -44,12 +44,21 @@ const Map: React.FC = () => {
   }, [viewState, isAdding]);
 
   useEffect(() => {
-    fetch(`${SERVER_URL}/contributions`)
-      .then(response => response.json())
-      .then(data => {
-        console.log('Contributions loaded:', data); // Añadir un log para verificar los datos cargados
+    // Obtener contribuciones desde Supabase
+    const fetchContributions = async () => {
+      const { data, error } = await supabase
+        .from('contributions')
+        .select('*');
+
+      if (error) {
+        console.error('Error al cargar las contribuciones:', error);
+      } else {
+        console.log('Contributions loaded:', data);
         setContributions(data);
-      });
+      }
+    };
+
+    fetchContributions();
   }, []);
 
   useEffect(() => {
@@ -84,22 +93,32 @@ const Map: React.FC = () => {
     setIsAdding(false);
   };
 
-  const handleModalSubmit = (data: { title: string; description: string }) => {
-    const newContribution = { id: Date.now().toString(), ...markerPosition, ...data } as Contribution;
-    const updatedContributions = [...contributions, newContribution];
-    setContributions(updatedContributions);
-    setMarkerPosition(null);
+  const handleModalSubmit = async (data: { user: string; title: string; description: string }) => {
+    const user = supabase.auth.user();
+    if (!user) {
+      console.error('No hay usuario autenticado');
+      return;
+    }
 
-    // Guardar en json-server
-    fetch(`${SERVER_URL}/contributions`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newContribution),
-    });
+    const newContribution = {
+      user_id: user.id,
+      title: data.title,
+      description: data.description,
+      latitude: markerPosition?.latitude!,
+      longitude: markerPosition?.longitude!,
+    };
 
-    console.log('Contribución guardada:', newContribution);
+    const { data: insertedData, error } = await supabase
+      .from('contributions')
+      .insert([newContribution]);
+
+    if (error) {
+      console.error('Error al añadir la contribución:', error);
+    } else {
+      console.log('Contribución añadida:', insertedData);
+      setContributions([...contributions, ...insertedData]);
+      setMarkerPosition(null);
+    }
   };
 
   const handleMarkerClick = (contributionId: string) => {
@@ -114,8 +133,6 @@ const Map: React.FC = () => {
     const [longitude, latitude] = cluster.geometry.coordinates;
     const { cluster: isCluster, point_count: pointCount } = cluster.properties;
 
-
-
     if (isCluster) {
       return (
         <Marker key={`cluster-${cluster.id}`} latitude={latitude} longitude={longitude}>
@@ -126,8 +143,6 @@ const Map: React.FC = () => {
               height: `${25 + (pointCount / contributions.length) * 20}px`,
             }}
             onClick={() => {
-              // Instead of using index.getClusterExpansionZoom, increase zoom by a fixed amount
-              // This is a simplified approach; you may want to calculate this based on the cluster's size or density
               const newZoomLevel = Math.min(viewState.zoom + 2, 20); // Ensure the zoom level does not exceed 20
               setViewState({
                 ...viewState,
@@ -163,10 +178,7 @@ const Map: React.FC = () => {
         mapStyle="mapbox://styles/mapbox/streets-v11"
         mapboxAccessToken={MAPBOX_TOKEN}
       >
-        {/*<NavigationControl position="top-right" />
-        <FullscreenControl position="top-right" />*/}
         <GeolocateControl position="top-right" />
-        {/*<ScaleControl position="bottom-left" />*/}
         {isAdding && (
           <Marker latitude={viewState.latitude} longitude={viewState.longitude}>
             <div className="mapboxgl-marker-adding"></div>

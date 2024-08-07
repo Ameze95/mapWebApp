@@ -1,25 +1,26 @@
-// src/components/Router/Router.tsx
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { useAuth } from '../../../supabase/AuthContext';
 import Layout from '../Layout/Layout';
-import Home from '../../pages/Home';
-import UserPage from '../../pages/UserPage';
+import LoginPage from '../../pages/Login';  
 import RegisterPage from '../../pages/Register';
-import LoginPage from '../../pages/Login';
+import HomePage from '../../pages/Home';
 
-const Router: React.FC = () => {
+const AppRouter: React.FC = () => {
+  const { session } = useAuth();
+
   return (
-    <BrowserRouter>
+    <Router>
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="user" element={<UserPage />} />
-          <Route path="register" element={<RegisterPage />} />
-          <Route path="login" element={<LoginPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/" element={session ? <Layout /> : <Navigate to="/login" />}>
+          <Route index element={<HomePage />} />
         </Route>
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
-    </BrowserRouter>
+    </Router>
   );
 };
 
-export default Router;
+export default AppRouter;
