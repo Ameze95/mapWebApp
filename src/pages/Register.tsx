@@ -6,6 +6,7 @@ const RegisterPage: React.FC = () => {
   const { signUp } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -13,11 +14,12 @@ const RegisterPage: React.FC = () => {
     e.preventDefault();
     try {
       await signUp(email, password);
-      alert('Registro exitoso. Por favor, verifica tu correo electrónico.');
+      alert('Register success. Now you can login');
       navigate('/login');
     } catch (error) {
         if (error instanceof Error) {
           setError(error.message);
+          console.error('Error al registrar:', error);
         } else {
           // Maneja el caso donde el error no es una instancia de Error
           setError('Ocurrió un error desconocido.');
@@ -26,26 +28,37 @@ const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div>
-      <h1>Registro</h1>
-      <form onSubmit={handleSubmit}>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <h1 className="text-4xl font-bold text-primary mb-4">Registro</h1>
+      <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+        <input
+          type="text"
+          name="name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Your Name"
+          className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-secondary"
+        />
         <input
           type="email"
-          placeholder="Correo electrónico"
+          name="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          required
+          placeholder="Your Email"
+          className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-md focus:outline-black focus:border-secondary"
         />
         <input
           type="password"
-          placeholder="Contraseña"
+          name="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          required
+          placeholder="Password"
+          className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-secondary"
         />
-        <button type="submit">Registrarse</button>
+        <button type="submit" className="bg-primary text-accent px-4 py-2 rounded-md w-full focus: background-primary">
+          Registrarse
+        </button>
       </form>
-      {error && <p>{error}</p>}
     </div>
   );
 };

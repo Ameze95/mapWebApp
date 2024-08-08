@@ -18,7 +18,7 @@ const UserProfile: React.FC = () => {
         </DropdownMenu.Trigger>
         <DropdownMenu.Content className="bg-white shadow-lg rounded p-2">
           <DropdownMenu.Item asChild>
-            <Link to="/user" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
+            <Link to="/userPage" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
               Página de Usuario
             </Link>
           </DropdownMenu.Item>

@@ -5,6 +5,7 @@ import Layout from '../Layout/Layout';
 import LoginPage from '../../pages/Login';  
 import RegisterPage from '../../pages/Register';
 import HomePage from '../../pages/Home';
+import UserPage from '../../pages/UserPage';
 
 const AppRouter: React.FC = () => {
   const { session } = useAuth();
@@ -17,7 +18,8 @@ const AppRouter: React.FC = () => {
         <Route path="/" element={session ? <Layout /> : <Navigate to="/login" />}>
           <Route index element={<HomePage />} />
         </Route>
-        <Route path="*" element={<Navigate to="/" />} />
+        
+        <Route path="/userPage" element={<UserPage/>} />
       </Routes>
     </Router>
   );

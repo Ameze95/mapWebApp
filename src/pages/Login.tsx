@@ -24,27 +24,32 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div>
-      <h1>Iniciar Sesión</h1>
-      <form onSubmit={handleSubmit}>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-secondary">
+      <h1 className="text-4xl font-bold text-primary mb-4">Welcome to LocalAid</h1>
+      <form onSubmit={handleSubmit} className=" bg-white p-6 rounded-xl shadow-xl w-full max-w-md">
         <input
           type="email"
-          placeholder="Correo electrónico"
+          name="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          required
+          
+          placeholder="Email"
+          className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:border-secondary"
         />
         <input
           type="password"
-          placeholder="Contraseña"
+          name="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          required
+          placeholder="Password"
+          className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:border-secondary"
         />
-        <button type="submit">Iniciar Sesión</button>
+        <button 
+        type="submit" 
+        className=" text-accent px-4 py-2 rounded-md w-full">
+          Iniciar Sesión
+        </button>
       </form>
-      {error && <p>{error}</p>}
-      <button onClick={() => navigate('/register')}>Registrarse</button>
     </div>
   );
 };

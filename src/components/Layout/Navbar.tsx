@@ -10,7 +10,7 @@ const Navbar: React.FC = () => {
       <NavigationMenu.List className="flex space-x-4">
         <NavigationMenu.Item>
           <NavigationMenu.Link asChild>
-            <Link to="/" className="hover:text-gray-300">Home</Link>
+            <Link to="/userPage" className="hover:text-gray-300">Home</Link>
           </NavigationMenu.Link>
         </NavigationMenu.Item>
         {/* Añade más elementos de navegación aquí en el futuro */}

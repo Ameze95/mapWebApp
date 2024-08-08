@@ -1,22 +1,24 @@
-// src/pages/UserPage.tsx
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../supabase/AuthContext';
+import { supabase } from '../../supabase/supabaseClient';
 
-const UserPage: React.FC = () => {
+const UserPage = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  useAuth
+
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Perfil de Usuario</h1>
-      <div className="flex items-center space-x-4">
-        <img
-          src="https://via.placeholder.com/100"
-          alt="Profile"
-          className="w-24 h-24 rounded-full"
-        />
-        <div>
-          <h2 className="text-xl">Nombre del Usuario</h2>
-          <p className="text-gray-600">Otra información del usuario</p>
-        </div>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <h1 className="text-4xl font-bold text-primary mb-4">Página de Usuario</h1>
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+        <p className="text-secondary">Información del usuario aquí.</p>
+          <div className="flex justify-between mt-4">
+            <button className="px-4 py-2 bg-green-500 text-white rounded-md" onClick={() => navigate('/')}>Go Home</button>
+            <button className="px-4 py-2 bg-red-500 text-white rounded-md" onClick={() => supabase.auth.signOut()}>Logout</button>
+          </div>
       </div>
-      {/* Aquí puedes añadir más información del usuario */}
     </div>
   );
 };
