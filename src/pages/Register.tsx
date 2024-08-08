@@ -14,7 +14,7 @@ const RegisterPage: React.FC = () => {
     e.preventDefault();
     try {
       await signUp(email, password);
-      alert('Register success. Now you can login');
+      alert('Congratulations register success! Now you can login and start to Contribute');
       navigate('/login');
     } catch (error) {
         if (error instanceof Error) {
@@ -29,7 +29,7 @@ const RegisterPage: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="text-4xl font-bold text-primary mb-4">Registro</h1>
+      <h1 className="text-4xl font-bold text-primary mb-4">Create your profile</h1>
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <input
           type="text"
@@ -55,9 +55,12 @@ const RegisterPage: React.FC = () => {
           placeholder="Password"
           className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-secondary"
         />
-        <button type="submit" className="bg-primary text-accent px-4 py-2 rounded-md w-full focus: background-primary">
-          Registrarse
+        <button type="submit" className="mb-4 bg-purple-200 text-accent px-4 py-2 rounded-md w-full focus: background-primary">
+          Register
         </button>
+        <button  className="bg-cyan-200 text-accent justify-center ml-24 px-4 py-2 rounded-md w-1/2 focus: background-primary" onClick={() => navigate('/login')}> 
+          Login
+          </button>
       </form>
     </div>
   );
