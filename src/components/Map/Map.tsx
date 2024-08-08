@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ReactMapGL, { NavigationControl, FullscreenControl, GeolocateControl, ScaleControl, Marker } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import supercluster from 'supercluster';
@@ -13,6 +13,7 @@ const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 
 interface Contribution {
   id: string;
+  user_id: string;
   title: string;
   description: string;
   latitude: number;
@@ -34,6 +35,8 @@ const Map: React.FC = () => {
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [clusters, setClusters] = useState<any[]>([]);
   const mapRef = useRef<any>(null);
+  
+  
 
   const { user } = useAuth();
 
@@ -43,23 +46,27 @@ const Map: React.FC = () => {
     }
   }, [viewState, isAdding]);
 
+  const fetchContributions = useCallback(async () => {
+    const { data, error } = await supabase
+      .from('contributions')
+      .select('*');
+
+    if (error) {
+      console.error('Error al cargar las contribuciones:', error);
+    } else {
+      console.log('Contributions loaded:', data);
+      // Asumiendo que tienes un estado para manejar las contribuciones
+      setContributions(data);
+    }
+  }, []);
+
   useEffect(() => {
-    // Obtener contribuciones desde Supabase
-    const fetchContributions = async () => {
-      const { data, error } = await supabase
-        .from('contributions')
-        .select('*');
-
-      if (error) {
-        console.error('Error al cargar las contribuciones:', error);
-      } else {
-        console.log('Contributions loaded:', data);
-        setContributions(data);
-      }
-    };
-
+    // Obtener contribuciones desde Supabase;
     fetchContributions();
   }, []);
+
+  
+
 
   useEffect(() => {
     if (mapRef.current) {
@@ -93,8 +100,30 @@ const Map: React.FC = () => {
     setIsAdding(false);
   };
 
-  const handleModalSubmit = async (data: { user: string; title: string; description: string }) => {
-    const user = supabase.auth.user();
+  const handleModalSubmit = async (data: { title: string; description: string }) => {
+    const fetchUserId = async () => {
+      const { data, error } = await supabase.auth.getUser();
+    
+      if (error) {
+        console.error('Error al obtener el usuario:', error);
+        return;
+      }
+    
+      if (data && data.user) {
+        const userId = data.user.id;
+        console.log('Fetched UUID:', userId);
+        return userId;
+      }
+    };
+    
+    // Uso de la función para obtener el userId
+    fetchUserId().then(userId => {
+      if (userId) {
+        // Aquí puedes usar userId para tus operaciones
+        console.log('User ID:', userId);
+      }
+    });
+
     if (!user) {
       console.error('No hay usuario autenticado');
       return;
@@ -108,6 +137,9 @@ const Map: React.FC = () => {
       longitude: markerPosition?.longitude!,
     };
 
+   
+
+
     const { data: insertedData, error } = await supabase
       .from('contributions')
       .insert([newContribution]);
@@ -116,9 +148,16 @@ const Map: React.FC = () => {
       console.error('Error al añadir la contribución:', error);
     } else {
       console.log('Contribución añadida:', insertedData);
-      setContributions([...contributions, ...insertedData]);
+      const newContributions = insertedData ? [...contributions, ...insertedData] : contributions;
+      setContributions(newContributions);
       setMarkerPosition(null);
+      fetchContributions();
+      
     }
+    
+
+    
+
   };
 
   const handleMarkerClick = (contributionId: string) => {
