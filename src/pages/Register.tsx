@@ -59,7 +59,7 @@ const RegisterPage: React.FC = () => {
           Register
         </button>
         <button  className="bg-cyan-200 text-accent justify-center ml-24 px-4 py-2 rounded-md w-1/2 focus: background-primary" onClick={() => navigate('/login')}> 
-          Login
+          Sign In
           </button>
       </form>
     </div>
