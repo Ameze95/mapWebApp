@@ -11,8 +11,8 @@ const AppRouter: React.FC = () => {
   const { session } = useAuth();
 
   return (
-    <Router>
-      <Routes>
+    <Router >
+      <Routes  >
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/" element={session ? <Layout /> : <Navigate to="/login" />}>

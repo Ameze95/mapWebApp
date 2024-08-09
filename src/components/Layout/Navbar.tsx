@@ -6,7 +6,7 @@ import UserProfile from '../UserProfile/UserProfile';
 
 const Navbar: React.FC = () => {
   return (
-    <NavigationMenu.Root className="bg-gray-800 text-white p-4 fixed top-0 left-0 right-0 z-10 flex justify-between items-center">
+    <NavigationMenu.Root className="bg-gradient-to-br from-blue-400 to-fuchsia-500 text-white p-4 fixed top-0 left-0 right-0 z-10 flex justify-between items-center">
       <NavigationMenu.List className="flex space-x-4">
         <NavigationMenu.Item>
           <NavigationMenu.Link asChild>
