@@ -17,7 +17,7 @@ const UserPage = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <h1 className="text-4xl font-bold text-primary mb-4">Página de Usuario</h1>
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-        <p className="text-secondary">Información del usuario aquí.</p>
+        <p className="text-black">Información del usuario aquí.</p>
           <div className="flex justify-between mt-4">
             <button className="px-4 py-2 bg-cyan-200 text-white rounded-md" onClick={() => navigate('/')}>Go Home</button>
             <button className="px-4 py-2 bg-blue-400 text-white rounded-md" onClick={() => signOut()} >Logout</button>
