@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { supabase } from './supabaseClient';
 import { Session, User ,AuthChangeEvent } from '@supabase/supabase-js';
+import Cookies from 'js-cookie';
 
 interface AuthContextType {
   session: Session | null;
@@ -19,6 +20,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
+
   useEffect(() => {
     const getSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -26,7 +28,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser(session?.user ?? null);
     };
 
+    const saveSessionToCookies = (session: string) => {
+      Cookies.set('userSession', session, { expires: 7 }); // Expira en 7 días
+      console.log('Session saved to cookies');
+    };
+
+
     getSession();
+    saveSessionToCookies(session as unknown as string);
+    
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (_event: AuthChangeEvent, session: Session | null) => {
@@ -37,6 +47,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     return () => {
       authListener.subscription.unsubscribe();
+      
     };
   }, []);
 

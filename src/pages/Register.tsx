@@ -28,9 +28,9 @@ const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen  bg-gradient-to-br from-blue-300 to-fuchsia-300 ">
-      <h1 className="text-4xl text-slate-900/[.5] font-bold mb-0">Welcome to LocalAid!</h1>
-      <h2 className="text-2xl  text-slate-900/[.5] font-bold mb-10">Create here your profile</h2>
+    <div className="flex flex-col items-center justify-center min-h-screen  bg-gradient-to-br from-blue-200 to-fuchsia-300 background-animate ">
+      <h1 className="text-4xl text-slate-600 font-light mb-0">Welcome to LocalAid!</h1>
+      <h2 className="text-2xl  text-slate-600 font-bold mb-4">Create here your profile</h2>
       <form onSubmit={handleSubmit} className=" bg-slate-200 bg-opacity-20 border border-black/[.1] p-6 rounded-md shadow-lg w-full max-w-md">
         <input
           type="text"
